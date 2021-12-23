@@ -36,7 +36,7 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
     public int calculateAllReports(Employee targetEmp) {
         LOG.debug("Calculate all reports");
         //use hashset to store all his reports, the total number of reports equal to set.size();
-        //because hashset can find duplicate reports. or we can use:
+        //because hashset can check duplicate reports. or we can use:
         //int count=0;
         HashSet<String> idSet = new HashSet<>();
         Queue<Employee> idQueue = new LinkedList<>();
@@ -49,12 +49,13 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
             if(directReports != null){
                 for(int i=0; i<directReports.size(); i++) {
                     String childId  = directReports.get(i).getEmployeeId();
-
+                    //if set contains this id already. return -1.
+                    //if it's not necessary to check duplicate, use commented code below.
                     if(!idSet.contains(childId)){
                         idSet.add(childId);
                         idQueue.add(employeeService.read(childId));
                     }else{
-                        LOG.debug("there is a bug");
+                        LOG.error("report structure error");
                         return -1;
                     }
                     //count++;
